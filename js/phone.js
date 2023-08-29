@@ -1,4 +1,4 @@
-const loadPhone = async (searchText, isShowAll) => {
+const loadPhone = async (searchText = '13', isShowAll) => {
     const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
     const data = await res.json();
     const phones = data.data;
@@ -20,13 +20,13 @@ const displayPhones = (phones, isShowAll) => {
         showAllContainer.classList.remove('hidden')
     } else { showAllContainer.classList.add('hidden') }
 
-    console.log('is show all', isShowAll);
+    // console.log('is show all', isShowAll);
     // display only first 12 phones if not show all;
     if (!isShowAll) {
         phones = phones.slice(0, 12);
     }
     phones.forEach(phone => {
-        console.log(phone);
+        // console.log(phone);
         // 2 create a div
         const phoneCard = document.createElement('div');
         phoneCard.classList = `card bg-gray-100 p-4 shadow-xl`
@@ -52,11 +52,44 @@ const displayPhones = (phones, isShowAll) => {
 
 // 
 const handleShowDetail = async (id) => {
-    console.log(id);
+    // console.log(id);
     // load single phone data
     const res = await fetch(`https://openapi.programming-hero.com/api/phone/${id}`);
     const data = await res.json();
-    console.log(data);
+    const phone = data.data;
+    showPhoneDetails(phone);
+
+}
+
+
+const showPhoneDetails = (phone) => {
+    console.log(phone);
+    const phoneName = document.getElementById('show-detail-phone-name');
+    phoneName.innerText = phone.name;
+
+    const showDetailContainer = document.getElementById('show-detail-container');
+
+    showDetailContainer.innerHTML = `
+        <img class="mx-auto" src="${phone.image}" alt="${phone.name}"/>
+        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >Storage:</span>${phone?.mainFeatures?.storage}</p>
+
+        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >Display Size: </span>${phone?.mainFeatures?.displaySize}</p>
+
+        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >Cheap Set: </span>${phone?.mainFeatures?.chipSet}</p>
+
+        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >Memory : </span>${phone?.mainFeatures?.memory}</p>
+
+        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >Slug : </span>${phone?.slug}</p>
+
+        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >Release Date : </span>${phone?.releaseDate}</p>
+
+        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >Brand : </span>${phone?.brand}</p>
+
+        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >GPS: </span>${phone?.others?.GPS}</p>
+
+    `;
+    // show the modal
+    show_details_modal.showModal();
 }
 
 
