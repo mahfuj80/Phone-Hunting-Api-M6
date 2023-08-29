@@ -85,7 +85,9 @@ const showPhoneDetails = (phone) => {
 
         <p class="text-2xl font-medium "><span class="text-3xl font-bold " >Brand : </span>${phone?.brand}</p>
 
-        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >GPS: </span>${phone?.others?.GPS}</p>
+        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >GPS: </span>${phone?.others?.GPS || 'No GPS Available'}</p>
+
+        <p class="text-2xl font-medium "><span class="text-3xl font-bold " >GPS: </span>${phone?.others?.GPS ? phone?.others?.GPS : 'No GPS available in this device'}</p>
 
     `;
     // show the modal
