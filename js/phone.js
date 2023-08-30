@@ -1,3 +1,4 @@
+// Load Data From API;
 const loadPhone = async (searchText = '13', isShowAll) => {
     const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
     const data = await res.json();
@@ -5,33 +6,39 @@ const loadPhone = async (searchText = '13', isShowAll) => {
     displayPhones(phones, isShowAll)
 }
 
-
+// Display Phone Dynamically;
 const displayPhones = (phones, isShowAll) => {
-    // console.log(phones);
-
     // 1 get the container
     const phoneContainer = document.getElementById('phone-container');
     // clear phone container card before adding new card;
     phoneContainer.textContent = ""
-
-    // display show all button if there  are more than 12 phone 
     const showAllContainer = document.getElementById('show-all-container');
-    if (phones.length > 12 && !isShowAll) {
-        showAllContainer.classList.remove('hidden')
-    } else { showAllContainer.classList.add('hidden') }
+    const noDataError = document.getElementById('no-data-messages');
+    if (phones.length <= 0) {
+        noDataError.classList.remove('hidden');
+        showAllContainer.classList.add('hidden')
+        toggleLoadingSpinner(false);
+        console.log(toggleLoadingSpinner);
 
-    // console.log('is show all', isShowAll);
-    // display only first 12 phones if not show all;
-    if (!isShowAll) {
-        phones = phones.slice(0, 12);
-    }
-    phones.forEach(phone => {
-        // console.log(phone);
-        // 2 create a div
-        const phoneCard = document.createElement('div');
-        phoneCard.classList = `card bg-gray-100 p-4 shadow-xl`
-        // 3: set inner HTML
-        phoneCard.innerHTML = `
+    } else {
+        // display show all button if there  are more than 12 phone 
+
+        if (phones.length > 12 && !isShowAll) {
+            showAllContainer.classList.remove('hidden')
+        } else { showAllContainer.classList.add('hidden') }
+
+        // console.log('is show all', isShowAll);
+        // display only first 12 phones if not show all;
+        if (!isShowAll) {
+            phones = phones.slice(0, 12);
+        }
+        phones.forEach(phone => {
+            // console.log(phone);
+            // 2 create a div
+            const phoneCard = document.createElement('div');
+            phoneCard.classList = `card bg-gray-100 p-4 shadow-xl`
+            // 3: set inner HTML
+            phoneCard.innerHTML = `
         <figure><img src="${phone.image}" alt="Shoes" /></figure>
         <div class="card-body">
             <h2 class="card-title">${phone.phone_name}</h2>
@@ -41,16 +48,17 @@ const displayPhones = (phones, isShowAll) => {
             </div>
         </div>
         `;
-        // 4: append Child;
-        phoneContainer.appendChild(phoneCard);
-    });
+            // 4: append Child;
+            phoneContainer.appendChild(phoneCard);
+        });
 
-    // hide loading spinner 
-    toggleLoadingSpinner(false);
+        // hide loading spinner 
+        toggleLoadingSpinner(false);
+        noDataError.classList.add('hidden');
+    }
 }
 
-
-// 
+// Get A Single Phone Details for Modal
 const handleShowDetail = async (id) => {
     // console.log(id);
     // load single phone data
@@ -58,12 +66,11 @@ const handleShowDetail = async (id) => {
     const data = await res.json();
     const phone = data.data;
     showPhoneDetails(phone);
-
 }
 
-
+// Dynamic Modal for A single Phone;
 const showPhoneDetails = (phone) => {
-    console.log(phone);
+    // console.log(phone);
     const phoneName = document.getElementById('show-detail-phone-name');
     phoneName.innerText = phone.name;
 
@@ -94,8 +101,6 @@ const showPhoneDetails = (phone) => {
     show_details_modal.showModal();
 }
 
-
-
 // handle search button
 const handleSearch = (isShowAll) => {
     toggleLoadingSpinner(true);
@@ -104,7 +109,7 @@ const handleSearch = (isShowAll) => {
     loadPhone(searchText, isShowAll);
 }
 
-
+// Spinner
 const toggleLoadingSpinner = (isLoading) => {
     const loadingSpinner = document.getElementById('loading-spinner');
     if (isLoading) {
@@ -118,7 +123,5 @@ const toggleLoadingSpinner = (isLoading) => {
 const handleShowAll = () => {
     handleSearch(true);
 }
-
-
 
 loadPhone();
